@@ -3,11 +3,18 @@ plugins {
     id 'io.spring.dependency-management' version "1.0.10.RELEASE"
     id 'org.springframework.boot' version '2.3.4.RELEASE'
     id 'pl.allegro.tech.build.axion-release' version '1.12.0'
+    id 'com.palantir.docker' version '0.25.0'
+    id 'com.palantir.docker-run' version '0.25.0'
 }
+
+version = scmVersion.version
+sourceCompatibility = 11
+
 repositories {
     mavenCentral()
     jcenter()
 }
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -15,11 +22,29 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-devtools'
     implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
 test {
     useJUnitPlatform()
 }
-project.version = scmVersion.version
+
+String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'stefanvantilburg'
+String imageName = "${dockerHubUsernameProperty}/spring-boot-api-example:$version"
+
+docker {
+    name imageName
+    files "build/libs/${bootJar.archiveFileName.get()}"
+    buildArgs([JAR_FILE: bootJar.archiveFileName.get()])
+}
+
+dockerRun {
+    name project.name
+    image imageName
+    ports '8080:8080'
+    clean true
+}
