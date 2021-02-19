@@ -1,0 +1,8 @@
+nl/tilburg/controller/ThemeParkRideController.java
+ nl.tilburg.controller.ThemeParkRideController
+nl/tilburg/entity/ThemeParkRide.java
+ nl.tilburg.entity.ThemeParkRide
+nl/tilburg/ThemeParkRidesExampleApplication.java
+ nl.tilburg.ThemeParkRidesExampleApplication
+nl/tilburg/repository/ThemeParkRideRepository.java
+ nl.tilburg.repository.ThemeParkRideRepository
